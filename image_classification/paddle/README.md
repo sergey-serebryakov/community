@@ -98,6 +98,7 @@ pages={211-252}
 Average accuracy for all samples in the test set.
 
 ### Quality target
+The training was run on 16 CPUs, one NVIDIA P100.
 After 9 days of training, the top-1/top-5 accuracy are 76.63%/93.10%.
 
 The error rate curves of AlexNet, ResNet50 and SE-ResNeXt-50 are shown in the figure below.
