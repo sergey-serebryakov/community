@@ -4,7 +4,7 @@ This benchmark uses [ResNet50](https://arxiv.org/abs/1512.03385) to classify [IL
 
 # 2. Directions
 ### Steps to set up the Paddle environment
-We provided PaddlePaddle v0.14.0 as a submodule so that users can compile PaddlePaddle from source. But since compiling takes quite some time (can take 1hr+ depending on the machine), we recommend using Docker image, which has a pre-compiled and stable PaddlePaddle environment.
+We provided [PaddlePaddle v0.14.0](http://www.paddlepaddle.org/documentation/docs/en/0.14.0/getstarted/quickstart_en.html) as a submodule so that users can compile PaddlePaddle from source. But since compiling takes quite some time (can take 1hr+ depending on the machine), we recommend using Docker image, which has a pre-compiled and stable PaddlePaddle environment.
 
 A docker image can be pulled using:
 ```
@@ -64,7 +64,7 @@ Since training can take a long time, we also provide some [pre-trained models](h
 
 # 3. Dataset/Environment
 ### Publication/Attribution
-[ImageNet Large Scale Visual Recognition Challenge](http://image-net.org/challenges/LSVRC/2012/index#introduction)
+[ImageNet Large Scale Visual Recognition Challenge](http://www.image-net.org/challenges/LSVRC/2012/)
 
 Citation:
 
