@@ -1,0 +1,6 @@
+[submodule "image_classification/paddle/Paddle"]
+	path = image_classification/paddle/Paddle
+	url = https://github.com/PaddlePaddle/Paddle.git
+[submodule "image_classification/paddle/models"]
+	path = image_classification/paddle/models
+	url = https://github.com/PaddlePaddle/models.git
