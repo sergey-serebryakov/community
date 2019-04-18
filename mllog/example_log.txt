@@ -1,0 +1,13 @@
+:::MLM 1538679543 benchmark: {"value": "gnmt", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679544 submission_name: {"value": "4xZPUs", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679545 mlperf_version: {"value": 0.6, "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679546 submitter: {"value": "Your Company, Co.", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679547 opt_hp_Adam_beta1: {"value": 0.9, "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679548 run_clock: {"value": "start", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679549 train_phase: {"value": "start", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679554 train_phase: {"value": "end", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679555 eval_phase: {"value": "start", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679556 eval_accuarcy: {"value": 23.7, "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679557 eval_phase: {"value": "end", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679584 run_clock: {"value": "end", "metadata": {"file": "./ncf.py", "line": 284}}
+:::MLM 1538679594 run_final: {"value": true, "metadata": {"file": "./ncf.py", "line": 284}}
