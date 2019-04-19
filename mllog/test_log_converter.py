@@ -1,7 +1,4 @@
-"""TODO(vbittorf): DO NOT SUBMIT without one-line documentation for test_converter.
-
-TODO(vbittorf): DO NOT SUBMIT without a detailed description of test_converter.
-"""
+"""Tests for log_converter.py."""
 
 from __future__ import absolute_import
 from __future__ import division
