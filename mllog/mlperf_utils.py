@@ -11,7 +11,7 @@ import sys
 from mllog import log_lines_file
 
 
-def get_mlperf_score_from_file(filename):
+def get_start_and_stop_from_file(filename):
   log_lines = log_lines_file.LogLineFile(filename)
   metrics, errors = log_lines.as_benchmark_run()
   start_ts = None
@@ -25,7 +25,7 @@ def get_mlperf_score_from_file(filename):
       if end_ts is None:
         end_ts = m.timestamp
       end_ts = max(m.timestamp, end_ts)
-  return end_ts - start_ts
+  return start_ts, end_ts
 
 
 def main():
