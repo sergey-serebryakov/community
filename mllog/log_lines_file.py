@@ -8,7 +8,7 @@ import re
 
 from mllog import metrics_file
 
-TOKEN = ':::MLM'
+TOKEN = ':::MLL'
 LINE_PATTERN = r"""
 ^
 {token} [ ] # token and version

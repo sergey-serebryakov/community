@@ -15,16 +15,16 @@ from mllog import metrics_file
 class LogLinesFileTest(unittest.TestCase):
 
   def test_convert_line_to_metric(self):
-    line = ':::MLM 123 foo : { "value": "bar", "metadata": {} }'
+    line = ':::MLL 123 foo : { "value": "bar", "metadata": {} }'
 
     expected = metrics_file.Metric(123, 'foo', 'bar', {})
     self.assertEqual(log_lines_file._convert_line_to_metric(line), expected)
 
   def test_parse_lines_as_metrics(self):
     log_lines = [
-        ':::MLM 123 clock : { "value": "START", "metadata": {} }',
-        ':::MLM 124 quality : { "value": "77.1", "metadata": {} }',
-        ':::MLM 125 clock : { "value": "END", "metadata": {} }',
+        ':::MLL 123 clock : { "value": "START", "metadata": {} }',
+        ':::MLL 124 quality : { "value": "77.1", "metadata": {} }',
+        ':::MLL 125 clock : { "value": "END", "metadata": {} }',
     ]
 
     with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
