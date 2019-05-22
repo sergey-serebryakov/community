@@ -29,7 +29,7 @@ def main():
   parser.add_argument('metrics_file', metavar='METRICS_FILE', type=str,
                       help='the structured metrics file to create/overwrite.')
   args = parser.parse_args()
-  if not convert_file(args.log_file, args.metrics_file):
+  if convert_file(args.log_file, args.metrics_file):
     sys.exit(1)
 
 
