@@ -13,7 +13,7 @@ LINE_PATTERN = r"""
 ^
 {token} [ ] # token and version
 ([\d\.]+) [ ] # timestamp
-([A-Za-z0-9_]+) [ ]? # key
+([A-Za-z0-9_\./\-]+) [ ]? # key
 :\s+(.+) # value
 $
 """.format(token=TOKEN)

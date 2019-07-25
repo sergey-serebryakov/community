@@ -12,7 +12,7 @@ import sys
 from google.cloud import bigquery
 
 
-def upload_file(metrics_file, project, dataset, table):
+def upload_file(metrics_file, project, dataset, table, model_name=None):
   """Uploads an MLLog JSON metrics file to BigQuery.
 
   Args:
@@ -20,6 +20,7 @@ def upload_file(metrics_file, project, dataset, table):
     project: Name of BigQuery project.
     dataset: Dataset within project.
     table: Table within dataset.
+    model_name: Unique name of this model benchmark.
 
   Returns:
     List of errors, if any.
@@ -29,7 +30,11 @@ def upload_file(metrics_file, project, dataset, table):
 
   metrics = convert_format_in_metrics_list(metrics)
 
-  benchmark_run = [{'metrics': metrics, 'upload_ts': _current_epoch_secs()}]
+  benchmark_run = [{
+      'metrics': metrics,
+      'upload_ts': _current_epoch_secs(),
+      'model_name': model_name,
+  }]
 
   return upload_metrics(benchmark_run, project, dataset, table)
 
@@ -106,10 +111,17 @@ def main():
       '--bigquery_table', type=str, help='The target BigQuery table.')
   parser.add_argument(
       '--metrics_file', type=str, help='The structured metrics file to upload.')
+  parser.add_argument(
+      '--model_name', type=str, help='The unique name of this model benchmark.')
   args = parser.parse_args()
 
-  errors = upload_file(args.metrics_file, args.bigquery_project,
-                       args.bigquery_dataset, args.bigquery_table)
+  errors = upload_file(
+      metrics_file=args.metrics_file,
+      project=args.bigquery_project,
+      dataset=args.bigquery_dataset,
+      table=args.bigquery_table,
+      model_name=args.model_name,
+  )
 
   if errors:
     print(errors)

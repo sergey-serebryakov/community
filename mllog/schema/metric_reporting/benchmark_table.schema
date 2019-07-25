@@ -1,0 +1,68 @@
+[
+ {
+  "name": "metrics",
+  "type": "RECORD",
+  "mode": "REPEATED",
+  "fields": [
+   {
+    "name": "key",
+    "type": "STRING",
+    "mode": "NULLABLE"
+   },
+   {
+    "name": "value",
+    "type": "STRING",
+    "mode": "NULLABLE"
+   },
+   {
+    "name": "ts",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE"
+   },
+   {
+    "name": "metadata",
+    "type": "RECORD",
+    "mode": "REPEATED",
+    "fields": [
+     {
+      "name": "key",
+      "type": "STRING",
+      "mode": "NULLABLE"
+     },
+     {
+      "name": "value",
+      "type": "STRING",
+      "mode": "NULLABLE"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name": "upload_ts",
+  "type": "TIMESTAMP",
+  "mode": "NULLABLE"
+ },
+ {
+  "name": "model_name",
+  "type": "STRING",
+  "mode": "NULLABLE"
+ },
+ {
+  "name": "metadata",
+  "type": "RECORD",
+  "mode": "REPEATED",
+  "fields": [
+   {
+    "name": "key",
+    "type": "STRING",
+    "mode": "NULLABLE"
+   },
+   {
+    "name": "value",
+    "type": "STRING",
+    "mode": "NULLABLE"
+   }
+  ]
+ }
+]

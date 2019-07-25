@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package metric_reporting;
+
+import "bq_field.proto";
+import "bq_table.proto";
+
+// A key/value pair for annotating with context.
+message Metadata {
+  // Aribtrary string to be used as key.
+  string key = 1;
+
+  // Arbitrary JSON value. Must be parsable with BigQuery's JSON_EXTRACT().
+  string value = 2;
+}
+
+// A discrete observation of a model, represented as a key/value pair in time.
+message Metric {
+  // Arbitrary string to be used as key.
+  string key = 1;
+
+  // Arbitrary JSON value. Must be parsable with BigQuery's JSON_EXTRACT().
+  string value = 2;
+
+  // Epoch time, in microseconds. We use an int64 rather than a more
+  // sophisticated proto here in order to keep cast compatibility with
+  // BigQuery TIMESTAMP.
+  int64 ts = 3 [(gen_bq_schema.bigquery) = { type_override: 'TIMESTAMP' }];
+
+  // Additional context for this Metric. We use a repeated proto because there's
+  // no BigQuery equivalent to proto maps.
+  repeated Metadata metadata = 4;
+}
+
+// A full run of a benchmark or test, including all observed Metrics.
+message BenchmarkRun {
+  option (gen_bq_schema.bigquery_opts).table_name = "benchmark_table";
+
+  repeated Metric metrics = 1;
+
+  // Timestamp of upload of this BenchMarkRun into BigQuery, used for ingestion.
+  // Epoch time, in microseconds.
+  int64 upload_ts = 2
+      [(gen_bq_schema.bigquery) = { type_override: 'TIMESTAMP' }];
+
+  // Uniquely identifying name for this model benchmark. Optional, can be used
+  // to differentiate between different models in the same database.
+  string model_name = 3;
+
+  // Additional context for this BenchmarkRun.
+  repeated Metadata metadata = 4;
+}
