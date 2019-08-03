@@ -1,0 +1,10 @@
+# https://github.com/gantheory/TPA-LSTM.git
+benchmark_commit="598cfc90f778856084f0ca80b463894e7ea26481"
+
+#
+docker_image="mlperf/deepts/tpa_lstm:default"
+
+# Standard docker args, suitable for GPU containers
+docker_args="--rm -ti --user $(id -u):$(id -g) --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864"
+[[ -n "${http_proxy}" ]] && docker_args="${docker_args} -e http_proxy=${http_proxy}"
+[[ -n "${https_proxy}" ]] && docker_args="${docker_args} -e https_proxy=${https_proxy}"

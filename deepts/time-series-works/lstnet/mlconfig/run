@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# run [traffic|electricity|solar-energy|exchange-rate]
+
+export root_dir=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
+
+[[ -f ""${root_dir}/config"" ]] && source "${root_dir}/config"
+[[ ! -d "${root_dir}/models" ]] && mkdir "${root_dir}/models"
+
+workload=$1
+
+if [[ "${workload}" == "traffic" ]]; then
+    args="--gpu 0 --data /mnt/data/traffic.txt --save /mnt/models/traffic.pt --hidSkip 10"
+elif [[ "${workload}" == "electricity" ]]; then
+    args="--gpu 0 --horizon 24 --data /mnt/data/electricity.txt --save /mnt/models/electricity.pt --output_fun Linear"
+elif [[ "${workload}" == "solar-energy" ]]; then
+    args="--gpu 0 --data /mnt/data/solar_AL.txt --save /mnt/models/solar_AL.pt --hidSkip 10 --output_fun Linear"
+elif [[ "${workload}" == "exchange-rate" ]]; then
+    args="--gpu 0 --data /mnt/data/exchange_rate.txt --save /mnt/models/exchange_rate.pt --hidCNN 50 --hidRNN 50 --L1Loss False --output_fun None"
+else
+    # Treat everything as command line arguments, user must know what they are doing
+    args="$@"
+    workload="custom"
+fi
+
+
+exec_cmd="cd /mnt/benchmark && python main.py ${args} |& tee /mnt/models/${workload}.txt"
+nvidia-docker run ${docker_args} \
+                  -v ${root_dir}/data:/mnt/data \
+                  -v ${root_dir}/benchmark:/mnt/benchmark \
+                  -v ${root_dir}/models:/mnt/models \
+                  ${docker_image} /bin/bash -c "${exec_cmd}"

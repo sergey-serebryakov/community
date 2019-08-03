@@ -1,0 +1,14 @@
+
+# https://github.com/laiguokun/multivariate-time-series-data.git
+dataset_commit="7f402f185cc2435b5e66aed13a3b560ed142e023"
+
+# https://github.com/laiguokun/LSTNet.git
+benchmark_commit="fb64ff34ade4eabf7168346475a101b9f7d458b7"
+
+#
+docker_image="mlperf/deepts/lstnet:default"
+
+# Standard docker args, suitable for GPU containers
+docker_args="--rm -ti --user $(id -u):$(id -g) --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864"
+[[ -n "${http_proxy}" ]] && docker_args="${docker_args} -e http_proxy=${http_proxy}"
+[[ -n "${https_proxy}" ]] && docker_args="${docker_args} -e https_proxy=${https_proxy}"

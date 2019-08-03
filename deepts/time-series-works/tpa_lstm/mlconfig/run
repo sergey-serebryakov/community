@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# run muse
+
+export root_dir=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
+
+[[ -f ""${root_dir}/config"" ]] && source "${root_dir}/config"
+[[ ! -d "${root_dir}/models" ]] && mkdir "${root_dir}/models"
+[[ ! -d "${root_dir}/data" ]] && mkdir "${root_dir}/data"
+
+workload=$1
+
+if [[ "${workload}" == "muse" ]]; then
+    args="--mode train --attention_len 16 --batch_size 32 --data_set muse --dropout 0.2 "
+    args=" ${args} --learning_rate 1e-5 --model_dir /mnt/models/muse --num_epochs 40 --num_layers 3 --num_units 338"
+else
+    # Treat everything as command line arguments, user must know what they are doing
+    args="$@"
+    workload="custom"
+fi
+
+#  |& tee /mnt/models/${workload}.txt
+nvidia-docker run ${docker_args} \
+                  -v ${root_dir}/data:/tpa_lstm/data \
+                  -v ${root_dir}/models:/mnt/models \
+                  ${docker_image} /bin/bash -c "python3.6 main.py ${args}"

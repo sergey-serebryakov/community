@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# This scrip builds (packages) a ML benchmark into a ML package (box). Use it like this:
+#   $ ./build lstnet
+# If successfully build, go and run, for instance:
+#   $ cd ./lstnet/mlbox && ./run exchange-rate
+# For more run options, study corresponding run script. You need to have docker and nvidia-docker installed.
+
+# A project path where ML config and box are located
+proj_dir=$( cd "$1" && pwd )
+
+run_stage() {
+    local script=$1
+    if [[ -f "${script}" ]]; then
+        ${script} || { echo "Failed to execute '${script}'."; exit 1; }
+    fi
+}
+
+# If we have already built/tried to build the MLBox, warn and exit.
+# [[ -d "${proj_dir}/mlbox" ]] && { echo "The mlbox folder exists. Delete it to rebuilt the ML box."; exit 1; }
+
+# Stage 0: create MLBox folder.
+export mlbox_dir="${proj_dir}/mlbox"
+if [[ ! -d "${mlbox_dir}" ]]; then
+    mkdir "${mlbox_dir}" || { echo "Cannot create ML box folder"; exit 1; }
+fi
+
+# Stage 1: export benchmark-specific parameters
+[[ -f "${proj_dir}/mlconfig/config" ]] && source "${proj_dir}/mlconfig/config"
+
+# Stage 2: build dataset [optional]
+run_stage "${proj_dir}/mlconfig/bin/build_dataset"
+
+# Stage 3: build benchmark [optional]
+run_stage "${proj_dir}/mlconfig/bin/build_benchmark"
+
+# Stage 4: build runtime [only docker for now]
+if [[ -d "${proj_dir}/mlconfig/runtime" ]]; then
+    args=""
+    [[ -n "${http_proxy}" ]] && args="${args} --build-arg http_proxy=${http_proxy}"
+    [[ -n "${https_proxy}" ]] && args="${args} --build-arg https_proxy=${https_proxy}"
+    [[ -n "${benchmark_commit}" ]] && args="${args} --build-arg BENCHMARK_COMMIT=${benchmark_commit}"
+
+    docker build -t ${docker_image} $args ${proj_dir}/mlconfig/runtime
+fi
+
+# Stage 5: copy runner and config if exist
+[[ -f "${proj_dir}/mlconfig/config" ]] && cp "${proj_dir}/mlconfig/config" "${mlbox_dir}/"
+[[ -f "${proj_dir}/mlconfig/run" ]] && cp "${proj_dir}/mlconfig/run" "${mlbox_dir}/"

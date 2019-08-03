@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Must be set: ${mlbox_dir}, ${dataset_commit}, ${proj_dir}
+
+if [[ ! -d "${mlbox_dir}/benchmark" ]]; then
+    cd "${mlbox_dir}"
+    git clone https://github.com/laiguokun/LSTNet.git ./benchmark
+
+    cd ./benchmark && git reset --hard ${benchmark_commit} && cd ..
+
+    cd "${proj_dir}"
+fi

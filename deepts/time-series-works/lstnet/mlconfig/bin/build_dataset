@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Must be set: ${mlbox_dir}, ${dataset_commit}, ${proj_dir}
+
+if [[ ! -d "${mlbox_dir}/data" ]]; then
+    cd "${mlbox_dir}"
+    git clone https://github.com/laiguokun/multivariate-time-series-data.git ./mts_data
+
+    cd ./mts_data && git reset --hard ${dataset_commit} && cd ..
+    mkdir ./data
+
+    gunzip -c ./mts_data/traffic/traffic.txt.gz > ./data/traffic.txt
+    gunzip -c ./mts_data/electricity/electricity.txt.gz > ./data/electricity.txt
+    gunzip -c ./mts_data/solar-energy/solar_AL.txt.gz > ./data/solar_AL.txt
+    gunzip -c ./mts_data/exchange_rate/exchange_rate.txt.gz > ./data/exchange_rate.txt
+
+    rm -rf ./mts_data
+
+    cd "${proj_dir}"
+fi
