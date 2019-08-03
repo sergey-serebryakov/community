@@ -1,0 +1,10 @@
+# https://github.com/damitkwr/ESRNN-GPU.git
+benchmark_commit="003bafbbce907268b5f72da51e7d64ad2f846ace"
+
+#
+docker_image="mlperf/deepts/es_rnn:default"
+
+# Standard docker args, suitable for GPU containers
+docker_args="--rm -ti --user $(id -u):$(id -g) --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864"
+[[ -n "${http_proxy}" ]] && docker_args="${docker_args} -e http_proxy=${http_proxy}"
+[[ -n "${https_proxy}" ]] && docker_args="${docker_args} -e https_proxy=${https_proxy}"

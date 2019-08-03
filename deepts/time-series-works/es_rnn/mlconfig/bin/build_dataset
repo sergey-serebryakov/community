@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Must be set: ${mlbox_dir}, ${dataset_commit}, ${proj_dir}
+
+if [[ ! -d "${mlbox_dir}/data" ]]; then
+    cd "${mlbox_dir}"
+    mkdir ./data && mkdir ./data/Train && mkdir ./data/Test
+
+    cd ./data
+    wget -O ./info.csv https://github.com/M4Competition/M4-methods/raw/master/Dataset/M4-info.csv
+
+    cd ./Train
+    wget https://www.m4.unic.ac.cy/wp-content/uploads/2017/12/M4DataSet.zip
+    unzip ./M4DataSet.zip && rm ./M4DataSet.zip
+
+    cd ../Test
+    wget https://www.m4.unic.ac.cy/wp-content/uploads/2018/07/M-test-set.zip
+    unzip ./M-test-set.zip && rm ./M-test-set.zip
+
+    cd "${proj_dir}"
+fi

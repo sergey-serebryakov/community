@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# run
+
+export root_dir=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
+
+[[ -f ""${root_dir}/config"" ]] && source "${root_dir}/config"
+[[ ! -d "${root_dir}/logs" ]] && mkdir "${root_dir}/logs"
+[[ ! -d "${root_dir}/models" ]] && mkdir "${root_dir}/models"
+[[ ! -d "${root_dir}/grouped_results" ]] && mkdir "${root_dir}/grouped_results"
+
+
+exec_cmd="export CUDA_VISIBLE_DEVICES=0; cd /esrnn_gpu/es_rnn && python3.6 ./main.py |& tee /esrnn_gpu/logs/stdout.txt"
+nvidia-docker run ${docker_args} \
+                  -v ${root_dir}/data:/esrnn_gpu/data \
+                  -v ${root_dir}/logs:/esrnn_gpu/logs \
+                  -v ${root_dir}/models:/esrnn_gpu/models \
+                  -v ${root_dir}/grouped_results:/esrnn_gpu/grouped_results \
+                  ${docker_image} /bin/bash -c "${exec_cmd}"

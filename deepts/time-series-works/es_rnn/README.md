@@ -5,50 +5,67 @@ __7 July 2019__. One of the time series forecasting models from [here](https://p
 ES-RNN is a hybrid between classical state space forecasting models and modern RNNs that achieved a 9.4% sMAPE improvement in the M4 competition. Crucially, ES-RNN implementation requires per-time series parameters. By vectorizing the original implementation and porting the algorithm to a GPU, we achieve up to 322x training speedup depending on batch size with similar results as those reported in the original submission. Our code can be found [here](https://github.com/damitkwr/ESRNN-GPU). Paper is [here](https://arxiv.org/abs/1907.03329).
 
 
-## Pre-requisites
+## Train models in standard environment
+# Build training package 
+../build .
 
-Download M4 data:
+# Run training for all or one of the below pre-configured models
 ```bash
-mkdir ./m4_data && cd ./m4_data
-wget https://www.m4.unic.ac.cy/wp-content/uploads/2017/12/M4DataSet.zip
-wget https://www.m4.unic.ac.cy/wp-content/uploads/2018/07/M-test-set.zip
-wget https://github.com/M4Competition/M4-methods/raw/master/Dataset/M4-info.csv
-mkdir ./Train && cd ./Train && unzip ../M4DataSet.zip && cd ..
-mkdir ./Test && cd ./Test && unzip ../M-test-set.zip && cd ..
-cd ..
+# Build training package 
+../build .
+
+# Run training
+./mlbox/run  # Will take some time
+
 ```
 
-Clone ES-RNN project:
-```bash
-git clone https://github.com/damitkwr/ESRNN-GPU.git
-cd ./ESRNN-GPU
-```
+## Train models in custom environment
 
-Copy M4 data to ES-RNN (symlink will probably work, in this case M4-info.csv needs to be renamed):
-```bash
-mkdir ./data && cd ./data
-mkdir ./Train && cp ../../m4_data/Train/* ./Train/
-mkdir ./Test && cp ../../m4_data/Test/* ./Test/
-cp ../../m4_data/M4-info.csv ./info.csv
-cd ../..
-``` 
+> The runtime is different here than the one used in standard environment (due to historical reasons). The ML box is also different.
 
-Install required [dependencies](https://github.com/damitkwr/ESRNN-GPU#prerequisites). As an example here, I will use one of PyTorch NGC containers that I have on my machine. 
+1. __Pre-requisites__  
+   Download M4 data:  
+   ```bash
+   mkdir ./m4_data && cd ./m4_data
+   wget https://www.m4.unic.ac.cy/wp-content/uploads/2017/12/M4DataSet.zip
+   wget https://www.m4.unic.ac.cy/wp-content/uploads/2018/07/M-test-set.zip
+   wget https://github.com/M4Competition/M4-methods/raw/master/Dataset/M4-info.csv
+   mkdir ./Train && cd ./Train && unzip ../M4DataSet.zip && cd ..
+   mkdir ./Test && cd ./Test && unzip ../M-test-set.zip && cd ..
+   cd ..
+   ```
 
-## Train model
+   Clone ES-RNN project:  
+   ```bash
+   git clone https://github.com/damitkwr/ESRNN-GPU.git
+   cd ./ESRNN-GPU
+   ```
 
-Initialize runtime. I use  `nvcr.io/nvidia/pytorch:19.03-py3` NGC container that happens to be available on my machine:
-```bash
-nvidia-docker run --rm -ti --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -v $(pwd)/ESRNN-GPU:/workspace nvcr.io/nvidia/pytorch:19.03-py3
-cd /workspace && pip install --user tensorflow==1.14.0
-```
+   Copy M4 data to ES-RNN (symlink will probably work, in this case M4-info.csv needs to be renamed):  
+   ```bash
+   mkdir ./data && cd ./data
+   mkdir ./Train && cp ../../m4_data/Train/* ./Train/
+   mkdir ./Test && cp ../../m4_data/Test/* ./Test/
+   cp ../../m4_data/M4-info.csv ./info.csv
+   cd ../..
+   ``` 
 
-Train model
-```bash
-export PYTHONPATH=$(pwd) CUDA_VISIBLE_DEVICES=0
-cd ./es_rnn
-python ./main.py
-```
+   Install required [dependencies](https://github.com/damitkwr/ESRNN-GPU#prerequisites). As an example here, I will use one of PyTorch NGC containers that I have on my machine. 
+
+2. __Train model__
+
+   Initialize runtime. I use  `nvcr.io/nvidia/pytorch:19.03-py3` NGC container that happens to be available on my machine:  
+   ```bash
+   nvidia-docker run --rm -ti --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -v $(pwd)/ESRNN-GPU:/workspace nvcr.io/nvidia/pytorch:19.03-py3
+   cd /workspace && pip install --user tensorflow==1.14.0 
+   ```
+
+   Train model:  
+   ```bash
+   export PYTHONPATH=$(pwd) CUDA_VISIBLE_DEVICES=0
+   cd ./es_rnn
+   python ./main.py
+   ```
 
 ## Results
 
@@ -73,5 +90,3 @@ Total training time is `138.77 minutes` which is  `9.25 minutes per epoch` which
 | 13       |  4.4728  |  6.3201     | 11.5749     | 12.3840     | 12.4372     |  9.9085     | 12.5480     | 10.8060     |  6.8778       |
 | 14       |  4.4667  |  6.3280     | 11.5834     | 12.3781     | 12.4447     |  9.9222     | 12.5414     | 10.8116     |  6.8778       |
 | 15       |  4.4610  |  6.3265     | 11.5792     | 12.3881     | 12.4420     |  9.9167     | 12.5600     | 10.8115     |  6.8812       |
-
-

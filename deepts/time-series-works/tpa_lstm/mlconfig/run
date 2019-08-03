@@ -19,8 +19,8 @@ else
     workload="custom"
 fi
 
-#  |& tee /mnt/models/${workload}.txt
+
 nvidia-docker run ${docker_args} \
                   -v ${root_dir}/data:/tpa_lstm/data \
                   -v ${root_dir}/models:/mnt/models \
-                  ${docker_image} /bin/bash -c "python3.6 main.py ${args}"
+                  ${docker_image} /bin/bash -c "python3.6 main.py ${args} |& tee /mnt/models/${workload}.txt"
