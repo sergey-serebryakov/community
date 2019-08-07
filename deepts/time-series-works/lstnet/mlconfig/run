@@ -31,9 +31,9 @@ else
     horizon=unk
 fi
 
-host_log_file=${root_dir}/models/${workload}_h${horizon}.txt
-exec_cmd="cd /mnt/benchmark && python main.py ${args} |& tee /mnt/models/${workload}_h${horizon}.txt"
-echo "START: $(date)" >> ${host_log_file}
+log_file=${workload}_h${horizon}.txt
+exec_cmd="cd /mnt/benchmark && python main.py ${args} |& tee -a /mnt/models/${log_file}"
+echo "START: $(date)" >> ${root_dir}/models/${log_file}
 start=$(date +%s)
 nvidia-docker run ${docker_args} \
                   -v ${root_dir}/data:/mnt/data \
@@ -41,5 +41,5 @@ nvidia-docker run ${docker_args} \
                   -v ${root_dir}/models:/mnt/models \
                   ${docker_image} /bin/bash -c "${exec_cmd}"
 end=$(date +%s)
-echo "STOP: $(date)" >> ${host_log_file}
-echo "EXECUTION TIME: $(expr ${end} - ${start}) seconds" >> ${host_log_file}
+echo "STOP: $(date)" >> ${root_dir}/models/${log_file}
+echo "EXECUTION TIME: $(expr ${end} - ${start}) seconds" >> ${root_dir}/models/${log_file}
