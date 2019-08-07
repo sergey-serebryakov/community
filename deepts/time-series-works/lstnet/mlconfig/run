@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # run traffic|electricity|solar-energy|exchange-rate  [PREDICTION_HORIZON]
-if [[ "$#" -ne 1 ]]; then
+if [[ "$#" -eq 0 ]]; then
     echo "Missing mandatory parameter (workload): [traffic | electricity | solar-energy | exchange-rate]"
     exit 1
 fi
