@@ -1,30 +1,37 @@
 #!/bin/bash
 
-# run [traffic|electricity|solar-energy|exchange-rate]
+# run traffic|electricity|solar-energy|exchange-rate  [PREDICTION_HORIZON]
+if [[ "$#" -ne 1 ]]; then
+    echo "Missing mandatory parameter (workload): [traffic | electricity | solar-energy | exchange-rate]"
+    exit 1
+fi
 
 export root_dir=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
-
 [[ -f ""${root_dir}/config"" ]] && source "${root_dir}/config"
 [[ ! -d "${root_dir}/models" ]] && mkdir "${root_dir}/models"
 
-workload=$1
+workload=$1        # 1st param is mandatory: workload type.
+horizon=${2:-12}   # 2nd param is optional: prediction horizon, values from the paper: [3, 6, 12, 24]
+
+gpu=0
+args="--gpu ${gpu} --horizon ${horizon} --save /mnt/models/${workload}_h${horizon}.pt"
 
 if [[ "${workload}" == "traffic" ]]; then
-    args="--gpu 0 --data /mnt/data/traffic.txt --save /mnt/models/traffic.pt --hidSkip 10"
+    args="${args} --data /mnt/data/traffic.txt --hidSkip 10"
 elif [[ "${workload}" == "electricity" ]]; then
-    args="--gpu 0 --horizon 24 --data /mnt/data/electricity.txt --save /mnt/models/electricity.pt --output_fun Linear"
+    args="${args} --data /mnt/data/electricity.txt --output_fun Linear"
 elif [[ "${workload}" == "solar-energy" ]]; then
-    args="--gpu 0 --data /mnt/data/solar_AL.txt --save /mnt/models/solar_AL.pt --hidSkip 10 --output_fun Linear"
+    args="${args} --data /mnt/data/solar_AL.txt --hidSkip 10 --output_fun Linear"
 elif [[ "${workload}" == "exchange-rate" ]]; then
-    args="--gpu 0 --data /mnt/data/exchange_rate.txt --save /mnt/models/exchange_rate.pt --hidCNN 50 --hidRNN 50 --L1Loss False --output_fun None"
+    args="${args} --data /mnt/data/exchange_rate.txt  --hidCNN 50 --hidRNN 50 --L1Loss False --output_fun None"
 else
-    # Treat everything as command line arguments, user must know what they are doing
+    # Treat everything as command line arguments, user must know what they do, also, ignore default args.
     args="$@"
     workload="custom"
+    horizon=unk
 fi
 
-
-exec_cmd="cd /mnt/benchmark && python main.py ${args} |& tee /mnt/models/${workload}.txt"
+exec_cmd="cd /mnt/benchmark && python main.py ${args} |& tee /mnt/models/${workload}_h${horizon}.txt"
 nvidia-docker run ${docker_args} \
                   -v ${root_dir}/data:/mnt/data \
                   -v ${root_dir}/benchmark:/mnt/benchmark \

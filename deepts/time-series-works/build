@@ -6,6 +6,14 @@
 #   $ cd ./lstnet/mlbox && ./run exchange-rate
 # For more run options, study corresponding run script. You need to have docker and nvidia-docker installed.
 
+if [[ "$#" -ne 1 ]]; then
+    echo "Build a ML package (box) for running DL workload in an isolated environment."
+    echo "Usage: $0 PROJECT_PATH"
+    echo "       PROJECT_PATH is one of (./es_rnn, ./lstnet, ./tpa_lstm)"
+    echo "Read the README.md file for information on these workloads."
+    exit 1
+fi
+
 # A project path where ML config and box are located
 proj_dir=$( cd "$1" && pwd )
 
